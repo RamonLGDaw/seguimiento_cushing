@@ -1,6 +1,7 @@
 import datetime
 import hashlib
 import os
+import zoneinfo
 import numpy as np
 import pandas as pd
 import plotly.express as px
@@ -12,13 +13,16 @@ from sqlalchemy import text
 # Cargar variables de entorno (.env)
 load_dotenv()
 
-st.set_page_config(page_title="Seguimiento Cushing", layout="wide")
+st.set_page_config(page_title="Seguimiento Cushing Croqueta", layout="wide")
 
-# --- Conexión a Neon PostgreSQL ---
-db_url = os.getenv("DATABASE_URL")
+# --- Conexión a Neon PostgreSQL (Compatible local / Streamlit Cloud) ---
+db_url = st.secrets.get("DATABASE_URL") or os.getenv("DATABASE_URL")
 
 if not db_url:
-  st.error("No se encontró la variable DATABASE_URL en el archivo .env")
+  st.error(
+      "No se encontró la variable DATABASE_URL en .env ni en los Secrets de"
+      " Streamlit."
+  )
   st.stop()
 
 conn = st.connection("postgres", type="sql", url=db_url)
@@ -56,10 +60,8 @@ def autenticar_usuario(username, password):
 # ==============================================================================
 # GESTIÓN DE SESIÓN PERSISTENTE (Mediante URL)
 # ==============================================================================
-# 1. Comprobar si hay un usuario guardado en los parámetros de la URL
 usuario_en_url = st.query_params.get("user", None)
 
-# 2. Sincronizar el estado de sesión
 if usuario_en_url:
   st.session_state.autenticado = True
   st.session_state.usuario_actual = usuario_en_url
@@ -108,8 +110,6 @@ st.sidebar.write(f"👤 Usuario: **{st.session_state.usuario_actual}**")
 if st.sidebar.button("🚪 Cerrar Sesión"):
   st.session_state.autenticado = False
   st.session_state.usuario_actual = ""
-
-  # Limpiar el parámetro de la URL
   st.query_params.clear()
   st.rerun()
 
@@ -137,7 +137,6 @@ with tab_dashboard:
         FROM seguimiento_cushing
         ORDER BY fecha ASC;
     """
-  # ttl=0 fuerza a consultar Neon sin guardar en caché local
   df_raw = conn.query(query, ttl=0)
 
   df_filtrado = df_raw.copy()
@@ -337,11 +336,12 @@ with tab_dashboard:
 with tab_formulario:
   st.subheader("📝 Registrar nuevo estado diario")
   st.write(
-      "Selecciona los valores observados para guardar la entrada en Neon.tech."
+      "Selecciona los valores observados para guardar la entrada en la base de datos. "
   )
 
-  # Fecha y hora actual por defecto
-  ahora = datetime.datetime.now()
+  # Fecha y hora actual ajustadas a la zona horaria de España (Europe/Madrid)
+  zona_horaria = zoneinfo.ZoneInfo("Europe/Madrid")
+  ahora = datetime.datetime.now(zona_horaria)
 
   with st.form("form_cushing", clear_on_submit=True):
     col_f1, col_f2 = st.columns(2)
