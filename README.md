@@ -1,5 +1,7 @@
 # 🐾 Sistema de Seguimiento Clínico - Síndrome de Cushing
 
+[![Documentación](https://img.shields.io/badge/📖_Documentación-Ver_en_mi_Portafolio-blue?style=for-the-badge)](https://lagidev.com/proyectos/cushing-streamlit-1/)
+
 Aplicación web interactiva desarrollada con **Streamlit** y **Python** para el registro, visualización y seguimiento diario de los síntomas asociados al Síndrome de Cushing en pacientes veterinarios.
 
 Permite a propietarios y veterinarios monitorizar la evolución sintomática en tiempo real mediante métricas clave, gráficos interactivos y exportación de informes clínicos vectoriales en PDF.
