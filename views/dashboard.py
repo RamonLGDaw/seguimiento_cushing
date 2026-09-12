@@ -85,6 +85,38 @@ def render_dashboard():
         width="stretch",
     )
 
+     # --- Guía Clínica ---
+    with st.expander("ℹ️ Ver guía de puntuaciones y significado clínico"):
+        col_a, col_b = st.columns(2)
+        with col_a:
+            st.markdown("""
+                    **Poliuria / Polidipsia (Sed y Orina)**
+                    * **0:** Bebe y orina una cantidad normal
+                    * **1:** Es posible que bebe y orine más
+                    * **2:** Bebe y orine más
+                    * **3:** Bebe y orine de forma constante
+
+                    **Apetito**
+                    * **0:** Come una cantidad normal
+                    * **1:** Se termina la comida rápido
+                    * **2:** Se termina la comida rápido y pide más
+                    * **3:** Obsesionado con la comida más que nunca
+                    """)
+        with col_b:
+            st.markdown("""
+                    **Aspecto General**
+                    * **0:** Aspecto normal
+                    * **1:** Algo menos de pelo y mala calidad de piel
+                    * **2:** Poco pelo +/- algo de panza
+                    * **3:** Muy poco pelo +/- panza
+
+                    **Actitud**
+                    * **0:** Actitud y actividad normales
+                    * **1:** No termina de ser el mismo
+                    * **2:** No es el mismo +/- jadeo en reposo
+                    * **3:** No es el mismo, débil +/- jadeo constante
+                    """)
+
     st.write("---")
 
     # --- Gráfico de Barras ---

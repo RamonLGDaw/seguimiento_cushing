@@ -62,6 +62,8 @@ tab_dashboard, tab_formulario = st.tabs(
     ["📊 Dashboard de Consulta", "📝 Nuevo Registro"]
 )
 
+
+
 with tab_dashboard:
   render_dashboard()
 
